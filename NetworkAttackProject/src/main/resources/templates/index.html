@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+	<title>Network Attack Data</title>
+	<!-- Add Bootstrap CSS -->
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+	<!-- Add Font Awesome for icons -->
+	<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+	<!-- Custom CSS for background image and styling -->
+	<style>
+		body {
+			background-image: url('https://via.placeholder.com/1920x1080');
+			/* Replace with your image URL */
+			background-size: cover;
+			background-position: center;
+			background-repeat: no-repeat;
+			min-height: 100vh;
+		}
+
+		.navbar {
+			background-color: rgba(0, 0, 0, 0.7) !important;
+			/* Semi-transparent navbar */
+		}
+
+		.card {
+			background-color: rgba(255, 255, 255, 0.9);
+			/* Semi-transparent card */
+			border: none;
+			border-radius: 10px;
+		}
+
+		.card-header {
+			background-color: rgba(0, 123, 255, 0.9) !important;
+			/* Semi-transparent card header */
+			border-radius: 10px 10px 0 0;
+		}
+
+		.btn-custom {
+			background-color: rgba(0, 123, 255, 0.9);
+			border: none;
+			color: white;
+			transition: background-color 0.3s ease;
+		}
+
+		.btn-custom:hover {
+			background-color: rgba(0, 86, 179, 0.9);
+		}
+	</style>
+</head>
+
+<body>
+	<!-- Navbar -->
+	<nav class="navbar navbar-expand-lg navbar-dark">
+		<div class="container-fluid">
+			<a class="navbar-brand" href="#">Network Attack Analysis</a>
+			<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+				aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+				<span class="navbar-toggler-icon"></span>
+			</button>
+			<div class="collapse navbar-collapse" id="navbarNav">
+				<ul class="navbar-nav">
+					<li class="nav-item">
+						<a class="nav-link" th:href="@{/}">Home</a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link" th:href="@{/upload}">Upload Dataset</a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link" th:href="@{/view}">View Dataset</a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link" th:href="@{/preprocess}">Preprocess</a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link" th:href="@{/predict}">Predict</a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link" th:href="@{/blockchain}">FileName Encrypt</a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link" th:href="@{/files}">View Encrypt Files</a>
+					</li>
+				</ul>
+			</div>
+		</div>
+	</nav>
+
+	<!-- Main Content -->
+	<div class="container mt-5">
+		<div class="row justify-content-center">
+			<div class="col-md-8">
+				<div class="card shadow-lg">
+					<div class="card-header text-white">
+						<h3 class="card-title mb-0">Welcome to Network Attack Analysis</h3>
+					</div>
+					<div class="card-body">
+						<p class="lead">Upload, preprocess, predict, and store network attack data securely.</p>
+						<div class="d-grid gap-3">
+							<a th:href="@{/upload}" class="btn btn-custom btn-lg">
+								<i class="fas fa-upload me-2"></i> Upload Dataset
+							</a>
+							<a th:href="@{/view}" class="btn btn-custom btn-lg">
+								<i class="fas fa-eye me-2"></i> View Dataset
+							</a>
+							<a th:href="@{/preprocess}" class="btn btn-custom btn-lg">
+								<i class="fas fa-cogs me-2"></i> Preprocess Data
+							</a>
+							<a th:href="@{/predict}" class="btn btn-custom btn-lg">
+								<i class="fas fa-chart-line me-2"></i> Predict Dataset
+							</a>
+							<a th:href="@{/blockchain}" class="btn btn-custom btn-lg">
+								<i class="fas fa-link me-2"></i> FileName Encrypt
+							</a>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<!-- Add Bootstrap JS and dependencies -->
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+
+</html>

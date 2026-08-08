@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>View Dataset</title>
+    <!-- Add Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Add Font Awesome for icons -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <!-- Add SweetAlert CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+    <!-- Custom CSS for styling -->
+    <style>
+        body {
+            background-color: #f8f9fa;
+        }
+        .card {
+            border: none;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        .card-header {
+            background-color: #007bff;
+            color: white;
+            border-radius: 10px 10px 0 0;
+            width: 1200px;
+        }
+        .card-body {
+            width: 1200px;
+            background-color: #007bff;
+        }
+        .btn-danger {
+            background-color: #dc3545;
+            border: none;
+        }
+        .btn-danger:hover {
+            background-color: #c82333;
+        }
+        .btn-info {
+            background-color: #17a2b8;
+            border: none;
+        }
+        .btn-info:hover {
+            background-color: #138496;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#">Network Attack Analysis</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link" th:href="@{/}">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" th:href="@{/upload}">Upload Dataset</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" th:href="@{/view}">View Dataset</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" th:href="@{/preprocess}">Preprocess</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" th:href="@{/predict}">Predict</a>
+                    </li>
+					<li class="nav-item">
+											<a class="nav-link" th:href="@{/blockchain}">FileName Encrypt</a>
+										</li>
+										<li class="nav-item">
+											<a class="nav-link" th:href="@{/files}">View Encrypt Files</a>
+										</li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="container mt-5">
+        <div class="card shadow">
+            <div class="card-header">
+                <h3 class="card-title mb-0">Network Attack Data</h3>
+            </div>
+            <div class="card-body">
+                <!-- Dataset Table -->
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th>No.</th>
+                            <th>Time</th>
+                            <th>Source</th>
+                            <th>Destination</th>
+                            <th>Protocol</th>
+                            <th>Length</th>
+                            <th>Info</th>
+                            <th style="min-width: 200px;">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="attack : ${attacks}">
+                            <td th:text="${attack.no}"></td>
+                            <td th:text="${attack.time}"></td>
+                            <td th:text="${attack.source}"></td>
+                            <td th:text="${attack.destination}"></td>
+                            <td th:text="${attack.protocol}"></td>
+                            <td th:text="${attack.length}"></td>
+                            <td th:text="${attack.info}"></td>
+                            <td>
+                                <!-- Delete Button -->
+                                <form th:action="@{/delete/{id}(id=${attack.id})}" method="POST" style="display: inline;">
+                                    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+                                    <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                                </form>
+                                <!-- View Details Button -->
+                                <button class="btn btn-info btn-sm" data-bs-toggle="modal" data-bs-target="#detailsModal" 
+                                        th:data-id="${attack.id}" th:data-no="${attack.no}" th:data-time="${attack.time}" 
+                                        th:data-source="${attack.source}" th:data-destination="${attack.destination}" 
+                                        th:data-protocol="${attack.protocol}" th:data-length="${attack.length}" 
+                                        th:data-info="${attack.info}">
+                                    View Details
+                                </button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Details Modal -->
+    <div class="modal fade" id="detailsModal" tabindex="-1" aria-labelledby="detailsModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="detailsModalLabel">Attack Details</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p><strong>No.:</strong> <span id="modalNo"></span></p>
+                    <p><strong>Time:</strong> <span id="modalTime"></span></p>
+                    <p><strong>Source:</strong> <span id="modalSource"></span></p>
+                    <p><strong>Destination:</strong> <span id="modalDestination"></span></p>
+                    <p><strong>Protocol:</strong> <span id="modalProtocol"></span></p>
+                    <p><strong>Length:</strong> <span id="modalLength"></span></p>
+                    <p><strong>Info:</strong> <span id="modalInfo"></span></p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Bootstrap JS and dependencies -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Add SweetAlert JS -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <!-- Script to populate modal with details -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            var detailsModal = document.getElementById('detailsModal');
+            detailsModal.addEventListener('show.bs.modal', function (event) {
+                var button = event.relatedTarget; // Button that triggered the modal
+                var id = button.getAttribute('data-id');
+                var no = button.getAttribute('data-no');
+                var time = button.getAttribute('data-time');
+                var source = button.getAttribute('data-source');
+                var destination = button.getAttribute('data-destination');
+                var protocol = button.getAttribute('data-protocol');
+                var length = button.getAttribute('data-length');
+                var info = button.getAttribute('data-info');
+
+                // Update modal content
+                document.getElementById('modalNo').textContent = no;
+                document.getElementById('modalTime').textContent = time;
+                document.getElementById('modalSource').textContent = source;
+                document.getElementById('modalDestination').textContent = destination;
+                document.getElementById('modalProtocol').textContent = protocol;
+                document.getElementById('modalLength').textContent = length;
+                document.getElementById('modalInfo').textContent = info;
+            });
+        });
+    </script>
+    <!-- Script to trigger SweetAlert for delete success message -->
+	<script th:inline="javascript">
+	    /*<![CDATA[*/
+	    const message = /*[[${message}]]*/ '';
+	    console.log("Message:", message); // Debug log
+	    if (message && message.includes('successfully')) {
+	        console.log("Triggering SweetAlert..."); // Debug log
+	        Swal.fire({
+	            icon: 'success',
+	            title: 'Success!',
+	            text: message,
+	            confirmButtonText: 'OK'
+	        });
+	    }
+	    /*]]>*/
+	</script>
+</body>
+</html>

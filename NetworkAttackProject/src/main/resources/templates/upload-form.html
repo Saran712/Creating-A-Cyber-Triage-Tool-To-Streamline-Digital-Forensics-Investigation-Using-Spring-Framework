@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Upload File</title>
+    <!-- Add Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Add Font Awesome for icons -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <!-- Add SweetAlert CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+    <!-- Custom CSS for styling -->
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f8f9fa;
+            padding-top: 60px; /* Space for fixed navbar */
+        }
+        .upload-container {
+            max-width: 600px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        .navbar {
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+    </style>
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#">Network Attack Analysis</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link" th:href="@{/}">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" th:href="@{/upload}">Upload Dataset</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" th:href="@{/view}">View Dataset</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" th:href="@{/preprocess}">Preprocess</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" th:href="@{/predict}">Predict</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" th:href="@{/blockchain}">FileName Encrypt</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" th:href="@{/files}">View Encrypt Files</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Upload Form Container -->
+    <div class="container mt-5">
+        <div class="upload-container">
+            <h1>Upload File</h1>
+            <form method="POST" th:action="@{/blockchain}" enctype="multipart/form-data" onsubmit="return validateAndConfirmUpload()">
+                <div class="form-group">
+                    <label for="file">Choose a CSV file:</label>
+                    <input type="file" class="form-control-file" id="file" name="file" accept=".csv" required>
+                </div>
+                <button type="submit" class="btn btn-primary">Upload</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Add Bootstrap JS and dependencies -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Add SweetAlert JS -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <!-- Custom JavaScript for file validation and SweetAlert -->
+    <script>
+        // Function to validate file input
+        function validateFileInput() {
+            const fileInput = document.getElementById('file');
+            const file = fileInput.files[0];
+
+            if (file) {
+                const fileName = file.name;
+                const fileExtension = fileName.split('.').pop().toLowerCase();
+
+                if (fileExtension !== 'csv') {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Invalid File Type',
+                        text: 'Only CSV files are allowed.',
+                        confirmButtonText: 'OK'
+                    });
+                    fileInput.value = ''; // Clear the file input
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        // Function to confirm file upload
+        function confirmUpload() {
+            Swal.fire({
+                title: 'Are you sure?',
+                text: "Do you want to upload this file?",
+                icon: 'question',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes, upload it!'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    // Submit the form if confirmed
+                    document.querySelector('form').submit();
+                }
+            });
+
+            return false; // Prevent form submission until confirmed
+        }
+
+        // Combined function for validation and confirmation
+        function validateAndConfirmUpload() {
+            if (!validateFileInput()) {
+                return false; // Prevent form submission if file is invalid
+            }
+            return confirmUpload(); // Proceed with confirmation
+        }
+
+        // Display SweetAlert if there's a success message
+        const message = /*[[${message}]]*/ '';
+        if (message && message.includes('successfully')) {
+            Swal.fire({
+                icon: 'success',
+                title: 'Upload Successful!',
+                text: message,
+                confirmButtonText: 'OK'
+            });
+        }
+    </script>
+</body>
+</html>
